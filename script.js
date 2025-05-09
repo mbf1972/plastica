@@ -1,9 +1,56 @@
 // Attendre que le DOM soit complètement chargé
-document.addEventListener('DOMContentLoaded', function() {
-    // Gestion du menu responsive
+document.addEventListener('DOMContentLoaded', () => {
     const menuToggle = document.querySelector('.menu-toggle');
     const mainMenu = document.querySelector('.main-menu');
     const header = document.querySelector('header');
+
+    // Toggle menu mobile
+    menuToggle.addEventListener('click', () => {
+        mainMenu.classList.toggle('active');
+        menuToggle.classList.toggle('active');
+    });
+
+    // Fermer le menu mobile en cliquant en dehors
+    document.addEventListener('click', (e) => {
+        if (!header.contains(e.target) && mainMenu.classList.contains('active')) {
+            mainMenu.classList.remove('active');
+            menuToggle.classList.remove('active');
+        }
+    });
+
+    // Gestion du menu responsive
+    function checkMenuDisplay() {
+        if (window.innerWidth <= 850) {
+            mainMenu.classList.remove('active');
+        }
+    }
+
+    // Vérifier au chargement et au redimensionnement
+    checkMenuDisplay();
+    window.addEventListener('resize', checkMenuDisplay);
+
+    // Animation du header au scroll
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+        const currentScroll = window.pageYOffset;
+
+        // Ajouter une classe pour réduire la taille du header au scroll
+        if (currentScroll > 100) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+
+        // Cacher/montrer le header selon la direction du scroll
+        if (currentScroll > lastScroll && currentScroll > 200) {
+            header.style.transform = 'translateY(-100%)';
+        } else {
+            header.style.transform = 'translateY(0)';
+        }
+
+        lastScroll = currentScroll;
+    });
 
     // Effet de scroll pour le header
     window.addEventListener('scroll', function() {
