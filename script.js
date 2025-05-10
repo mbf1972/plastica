@@ -5,16 +5,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const header = document.querySelector('header');
 
     // Toggle menu mobile
-    menuToggle.addEventListener('click', () => {
-        mainMenu.classList.toggle('active');
+    const menuDropdown = document.querySelector('.menu-dropdown');
+
+    menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation(); // Empêcher la propagation du clic
+        if (menuDropdown.style.display === 'block') {
+            menuDropdown.style.display = 'none';
+            menuDropdown.style.animation = 'none';
+        } else {
+            menuDropdown.style.display = 'block';
+            menuDropdown.style.animation = 'fadeIn 0.3s ease';
+        }
         menuToggle.classList.toggle('active');
+        console.log('Menu toggled'); // Pour le débogage
     });
 
     // Fermer le menu mobile en cliquant en dehors
     document.addEventListener('click', (e) => {
+        if (!menuToggle.contains(e.target)) {
+            menuDropdown.style.display = 'none';
+            menuToggle.classList.remove('active');
+        }
+
         if (!header.contains(e.target) && mainMenu.classList.contains('active')) {
             mainMenu.classList.remove('active');
-            menuToggle.classList.remove('active');
         }
     });
 
@@ -71,6 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Fermer le menu lorsqu'un lien est cliqué
     const menuLinks = document.querySelectorAll('.main-menu a');
+    const dropdownLinks = document.querySelectorAll('.menu-dropdown a');
 
     menuLinks.forEach(link => {
         link.addEventListener('click', function() {
@@ -78,6 +93,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 mainMenu.classList.remove('active');
                 if (menuToggle) menuToggle.classList.remove('active');
             }
+        });
+    });
+
+    // Fermer le menu déroulant lorsqu'un lien est cliqué
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            menuDropdown.style.display = 'none';
+            menuToggle.classList.remove('active');
         });
     });
 
@@ -162,6 +185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             .menu-toggle.active i {
                 transform: rotate(90deg);
+                color: var(--primary-color);
             }
         </style>
     `);
